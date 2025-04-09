@@ -4,6 +4,7 @@ stages:
 
 variables:
   GRADLE_OPTS: "-Dorg.gradle.daemon=false"
+  GIT_DEPTH: 0
 
 before_script:
   - export GRADLE_USER_HOME=`pwd`/.gradle
@@ -17,9 +18,13 @@ build:
   stage: build
   script:
     - echo "Building services"
+    - chmod +x AccountService/gradlew
     - cd AccountService && ./gradlew clean build && cd ..
+    - chmod +x OauthService/gradlew
     - cd OauthService && ./gradlew clean build && cd ..
+    - chmod +x StreamingService/gradlew
     - cd StreamingService && ./gradlew clean build && cd ..
+
 
 test:
   stage: test
