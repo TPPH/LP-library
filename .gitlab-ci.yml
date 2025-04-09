@@ -7,7 +7,6 @@ variables:
   SONARQUBE_URL: "http://sonarqube:9000"  # Point to SonarQube service in Docker network
   GRADLE_OPTS: "-Dorg.gradle.daemon=false"
   GIT_DEPTH: 0
-  SONARQUBE_SCANNER_PARAMS: "-Dsonar.login=$SONAR_TOKEN"
 
 before_script:
   - export GRADLE_USER_HOME=`pwd`/.gradle  # Set Gradle user home to avoid using default
