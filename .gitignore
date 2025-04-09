@@ -1,0 +1,18 @@
+# IntelliJ project files
+.idea/
+*.iml
+
+# Logs
+logs/
+*.log
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Maven / Gradle
+target/
+build/
+
+# Docker
+*.env
