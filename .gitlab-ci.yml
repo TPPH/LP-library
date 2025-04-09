@@ -1,17 +1,16 @@
 stages:
   - build
   - test
-  - sonarqube
+  - sonarqube  # Added SonarQube as a separate stage
 
 variables:
   GRADLE_OPTS: "-Dorg.gradle.daemon=false"
   GIT_DEPTH: 0
-  SONARQUBE_SCANNER_PARAMS: "-Dsonar.login=$SONAR_TOKEN"
+  SONARQUBE_SCANNER_PARAMS: "-Dsonar.login=$SONAR_TOKEN"  # Add SonarQube login token variable
 
 before_script:
-  - export GRADLE_USER_HOME=`pwd`/.gradle
+  - export GRADLE_USER_HOME=`pwd`/.gradle  # Set Gradle user home to avoid using default
   - chmod +x gradlew  # Ensure gradlew is executable
-
 
 cache:
   key: "$CI_PROJECT_ID"
@@ -22,7 +21,7 @@ cache:
 build:
   stage: build
   script:
-    - ./gradlew clean build
+    - ./gradlew clean build  # Clean and build your project
 
 # Test stage
 test:
@@ -34,6 +33,8 @@ test:
 sonarqube:
   stage: sonarqube
   script:
-    - ./gradlew sonarqube -Dsonar.login=$SONAR_TOKEN
+    - ./gradlew sonarqube -Dsonar.login=$SONAR_TOKEN  # Run SonarQube analysis with authentication token
   only:
-    - master
+    - master  # Run SonarQube analysis only on the master branch
+    - main
+  allow_failure: false  # Fail the pipeline if SonarQube analysis fails
