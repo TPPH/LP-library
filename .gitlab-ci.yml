@@ -6,6 +6,7 @@ stages:
 variables:
   GRADLE_OPTS: "-Dorg.gradle.daemon=false"
   GIT_DEPTH: 0
+  SONARQUBE_SCANNER_PARAMS: "-Dsonar.login=$SONAR_TOKEN"
 
 before_script:
   - export GRADLE_USER_HOME=`pwd`/.gradle
@@ -15,23 +16,22 @@ cache:
   paths:
     - .gradle/
 
-  # Build stage
-  build:
-    stage: build
-    script:
-      - ./gradlew clean build
+# Build stage
+build:
+  stage: build
+  script:
+    - ./gradlew clean build
 
+# Test stage
 test:
   stage: test
   script:
-    - echo "Running tests"
+    - ./gradlew test  # Ensure this runs your tests
 
-
-
-  # SonarQube analysis stage
-  sonarqube:
-    stage: sonarqube
-    script:
-      - ./gradlew sonarqube -Dsonar.login=$SONAR_TOKEN
-    only:
-      - master
+# SonarQube analysis stage
+sonarqube:
+  stage: sonarqube
+  script:
+    - ./gradlew sonarqube -Dsonar.login=$SONAR_TOKEN
+  only:
+    - master
