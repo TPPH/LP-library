@@ -1,0 +1,30 @@
+stages:
+  - build
+  - test
+
+variables:
+  GRADLE_OPTS: "-Dorg.gradle.daemon=false"
+
+before_script:
+  - export GRADLE_USER_HOME=`pwd`/.gradle
+
+cache:
+  key: "$CI_PROJECT_ID"
+  paths:
+    - .gradle/
+
+build:
+  stage: build
+  script:
+    - echo "Building services"
+    - cd AccountService && ./gradlew clean build && cd ..
+    - cd OauthService && ./gradlew clean build && cd ..
+    - cd StreamingService && ./gradlew clean build && cd ..
+
+test:
+  stage: test
+  script:
+    - echo "Running tests"
+    - cd AccountService && ./gradlew test && cd ..
+    - cd OauthService && ./gradlew test && cd ..
+    - cd StreamingService && ./gradlew test && cd ..
