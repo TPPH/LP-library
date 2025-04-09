@@ -1,12 +1,13 @@
 stages:
   - build
   - test
-  - sonarqube  # Added SonarQube as a separate stage
+  - sonarqube
 
 variables:
+  SONARQUBE_URL: "http://sonarqube:9000"  # Point to SonarQube service in Docker network
   GRADLE_OPTS: "-Dorg.gradle.daemon=false"
   GIT_DEPTH: 0
-  # Removed SONARQUBE_SCANNER_PARAMS, passing sonar.login directly in the gradle command
+  SONARQUBE_SCANNER_PARAMS: "-Dsonar.login=$SONAR_TOKEN"
 
 before_script:
   - export GRADLE_USER_HOME=`pwd`/.gradle  # Set Gradle user home to avoid using default
@@ -33,7 +34,7 @@ test:
 sonarqube:
   stage: sonarqube
   script:
-    - ./gradlew sonarqube -Dsonar.login=$SONAR_TOKEN  # Run SonarQube analysis with authentication token
+    - ./gradlew sonarqube -Dsonar.login=$SONAR_TOKEN -Dsonar.host.url=$SONARQUBE_URL  # Use environment variable for SonarQube URL
   only:
     - master  # Run SonarQube analysis only on the master branch
   allow_failure: false  # Fail the pipeline if SonarQube analysis fails
