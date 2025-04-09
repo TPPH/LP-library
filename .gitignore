@@ -13,6 +13,7 @@ Thumbs.db
 # Maven / Gradle
 target/
 build/
+.gradle
 
 # Docker
 *.env

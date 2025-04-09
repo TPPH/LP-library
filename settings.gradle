@@ -1,0 +1,3 @@
+rootProject.name = 'LP-library'
+
+include 'AccountService', 'OauthService', 'StreamingService'  // Add your submodules here

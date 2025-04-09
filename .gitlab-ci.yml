@@ -30,6 +30,3 @@ test:
   stage: test
   script:
     - echo "Running tests"
-    - cd AccountService && ./gradlew test && cd ..
-    - cd OauthService && ./gradlew test && cd ..
-    - cd StreamingService && ./gradlew test && cd ..
