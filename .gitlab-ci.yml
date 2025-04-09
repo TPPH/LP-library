@@ -6,7 +6,7 @@ stages:
 variables:
   GRADLE_OPTS: "-Dorg.gradle.daemon=false"
   GIT_DEPTH: 0
-  SONARQUBE_SCANNER_PARAMS: "-Dsonar.login=$SONAR_TOKEN"  # Add SonarQube login token variable
+  # Removed SONARQUBE_SCANNER_PARAMS, passing sonar.login directly in the gradle command
 
 before_script:
   - export GRADLE_USER_HOME=`pwd`/.gradle  # Set Gradle user home to avoid using default
@@ -36,5 +36,4 @@ sonarqube:
     - ./gradlew sonarqube -Dsonar.login=$SONAR_TOKEN  # Run SonarQube analysis with authentication token
   only:
     - master  # Run SonarQube analysis only on the master branch
-    - main
   allow_failure: false  # Fail the pipeline if SonarQube analysis fails
