@@ -10,6 +10,8 @@ variables:
 
 before_script:
   - export GRADLE_USER_HOME=`pwd`/.gradle
+  - chmod +x gradlew  # Ensure gradlew is executable
+
 
 cache:
   key: "$CI_PROJECT_ID"
