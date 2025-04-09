@@ -1,6 +1,7 @@
 stages:
   - build
   - test
+  - sonarqube
 
 variables:
   GRADLE_OPTS: "-Dorg.gradle.daemon=false"
@@ -14,19 +15,23 @@ cache:
   paths:
     - .gradle/
 
-build:
-  stage: build
-  script:
-    - echo "Building services"
-    - chmod +x AccountService/gradlew
-    - cd AccountService && ./gradlew clean build && cd ..
-    - chmod +x OauthService/gradlew
-    - cd OauthService && ./gradlew clean build && cd ..
-    - chmod +x StreamingService/gradlew
-    - cd StreamingService && ./gradlew clean build && cd ..
-
+  # Build stage
+  build:
+    stage: build
+    script:
+      - ./gradlew clean build
 
 test:
   stage: test
   script:
     - echo "Running tests"
+
+
+
+  # SonarQube analysis stage
+  sonarqube:
+    stage: sonarqube
+    script:
+      - ./gradlew sonarqube -Dsonar.login=$SONAR_TOKEN
+    only:
+      - master
