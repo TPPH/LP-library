@@ -22,8 +22,8 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 
-	// Google Cloud Storage dependency
-	implementation 'com.google.cloud:google-cloud-storage:2.38.0'
+		implementation 'com.azure:azure-storage-blob:12.25.0' // Or latest version
+
 
 	// Lombok to reduce boilerplate
 	compileOnly 'org.projectlombok:lombok:1.18.24'

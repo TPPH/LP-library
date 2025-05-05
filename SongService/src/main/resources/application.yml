@@ -1,0 +1,7 @@
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: dev-4tf0bmkwzjz08jb2.us.auth0.com
+          audience: https://song-api-endpoint/

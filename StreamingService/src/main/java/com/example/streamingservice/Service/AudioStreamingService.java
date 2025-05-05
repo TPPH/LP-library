@@ -1,7 +1,8 @@
 package com.example.streamingservice.Service;
 
-import com.google.cloud.storage.Blob;
-import com.google.cloud.storage.Storage;
+import com.azure.storage.blob.BlobClient;
+import com.azure.storage.blob.BlobContainerClient;
+import com.azure.storage.blob.models.BlobStorageException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -12,26 +13,31 @@ import org.springframework.stereotype.Service;
 public class AudioStreamingService {
 
     @Autowired
-    private Storage storage;
-
-    private static final String BUCKET_NAME = "your-bucket-name";
+    private BlobContainerClient blobContainerClient;
 
     public ResponseEntity<byte[]> streamAudio(String fileName) {
         try {
-            // Retrieve the audio file from Google Cloud Storage
-            Blob blob = storage.get(BUCKET_NAME, fileName);
-            if (blob == null) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("File not found".getBytes());
+            // Get the BlobClient for the file
+            BlobClient blobClient = blobContainerClient.getBlobClient(fileName);
+
+            // Check if the blob exists
+            if (!blobClient.exists()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body("File not found".getBytes());
             }
 
-            // Get the audio content as byte array directly from the blob
-            byte[] audioContent = blob.getContent();
+            // Download blob content to byte array
+            byte[] audioContent = blobClient.downloadContent().toBytes();
 
-            // Prepare the response with the audio content
+            // Build and return the response
             return ResponseEntity.ok()
                     .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + fileName + "\"")
                     .header(HttpHeaders.CONTENT_TYPE, "audio/mpeg")
                     .body(audioContent);
+
+        } catch (BlobStorageException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(("Azure error: " + e.getMessage()).getBytes());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error streaming the audio".getBytes());

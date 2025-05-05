@@ -1,22 +1,6 @@
 version: '3.8'
 
 services:
-  account-service:
-    build: ./AccountService
-    container_name: account-service
-    ports:
-      - "8081:8081"
-    networks:
-      - my-network
-    environment:
-      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
-      SPRING_KAFKA_TOPIC_NAME: account-topic
-    depends_on:
-      kafka:
-        condition: service_started
-      oauth-service:
-        condition: service_started
-
   oauth-service:
     build: ./OauthService
     container_name: oauth-service
@@ -24,6 +8,46 @@ services:
       - "8082:8082"
     networks:
       - my-network
+
+  song-service:
+    build: ./SongService
+    container_name: song-service
+    ports:
+      - "8083:8083"
+    networks:
+      - my-network
+    environment:
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      SPRING_KAFKA_TOPIC_NAME: song-topic
+      SPRING_DATASOURCE_URL: jdbc:postgresql://song-db:5432/song_db  # Connect to PostgreSQL database for songs
+      SPRING_DATASOURCE_USERNAME: song_user
+      SPRING_DATASOURCE_PASSWORD: song_password
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_JPA_DATABASE_PLATFORM: org.hibernate.dialect.PostgreSQLDialect
+    depends_on:
+      kafka:
+        condition: service_started
+      oauth-service:
+        condition: service_started
+      song-db:
+        condition: service_started
+
+  streaming-service:
+    build: ./StreamingService
+    container_name: streaming-service
+    ports:
+      - "8084:8084"
+    networks:
+      - my-network
+    environment:
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      SPRING_KAFKA_TOPIC_NAME: streaming-topic
+    depends_on:
+      kafka:
+        condition: service_started
+      song-service:
+        condition: service_started
+    restart: always  # Optional, adds a restart policy
 
   zookeeper:
     image: confluentinc/cp-zookeeper:latest
@@ -56,24 +80,35 @@ services:
     ports:
       - "9000:9000"
     environment:
-      - SONARQUBE_JDBC_URL=jdbc:postgresql://db:5432/sonar
+      - SONARQUBE_JDBC_URL=jdbc:postgresql://sonar-db:5432/sonar
       - SONARQUBE_JDBC_USERNAME=sonar
       - SONARQUBE_JDBC_PASSWORD=sonar
     networks:
       - my-network
     depends_on:
-      - db
+      - sonar-db
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:9000"]
       interval: 30s
       retries: 3
 
-  db:
+  song-db:
     image: postgres:latest
-    container_name: db
+    container_name: song-db
+    environment:
+      POSTGRES_PASSWORD: song_password
+      POSTGRES_DB: song_db
+      POSTGRES_USER: song_user
+    networks:
+      - my-network
+
+  sonar-db:
+    image: postgres:latest
+    container_name: sonar-db
     environment:
       POSTGRES_PASSWORD: sonar
       POSTGRES_DB: sonar
+      POSTGRES_USER: sonar
     networks:
       - my-network
 
