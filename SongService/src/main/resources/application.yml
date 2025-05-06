@@ -1,7 +1,17 @@
 spring:
+  application:
+    name: SongService
   security:
     oauth2:
       resourceserver:
         jwt:
           issuer-uri: dev-4tf0bmkwzjz08jb2.us.auth0.com
           audience: https://song-api-endpoint/
+  datasource:
+    url: jdbc:postgresql://song-db:5432/song_db
+    username: song_user
+    password: song_password
+  jpa:
+    hibernate:
+      ddl-auto: create
+    defer-datasource-initialization: true
