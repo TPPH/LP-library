@@ -19,7 +19,7 @@ services:
     environment:
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
       SPRING_KAFKA_TOPIC_NAME: song-topic
-      SPRING_DATASOURCE_URL: jdbc:postgresql://song-db:5432/song_db  # Connect to PostgreSQL database for songs
+      SPRING_DATASOURCE_URL: jdbc:postgresql://song-db:5432/song_db
       SPRING_DATASOURCE_USERNAME: song_user
       SPRING_DATASOURCE_PASSWORD: song_password
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
@@ -47,7 +47,32 @@ services:
         condition: service_started
       song-service:
         condition: service_started
-    restart: always  # Optional, adds a restart policy
+    restart: always
+
+  favorites-service:
+    build: ./FavoritesService
+    container_name: favorites-service
+    ports:
+      - "8085:8085"
+    networks:
+      - my-network
+    environment:
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      SPRING_DATASOURCE_URL: jdbc:postgresql://favorites-db:5432/favoritesdb
+      SPRING_DATASOURCE_USERNAME: favorites_user
+      SPRING_DATASOURCE_PASSWORD: favorites_password
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_JPA_DATABASE_PLATFORM: org.hibernate.dialect.PostgreSQLDialect
+      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI: https://<your-auth0-domain>/
+      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_AUDIENCE: <your-api-identifier>
+    depends_on:
+      kafka:
+        condition: service_started
+      favorites-db:
+        condition: service_started
+      oauth-service:
+        condition: service_started
+
 
   zookeeper:
     image: confluentinc/cp-zookeeper:latest
@@ -99,6 +124,20 @@ services:
       POSTGRES_PASSWORD: song_password
       POSTGRES_DB: song_db
       POSTGRES_USER: song_user
+    ports:
+      - "5432:5432"
+    networks:
+      - my-network
+
+  favorites-db:
+    image: postgres:latest
+    container_name: favorites-db
+    environment:
+      POSTGRES_PASSWORD: favorites_password
+      POSTGRES_DB: favoritesdb
+      POSTGRES_USER: favorites_user
+    ports:
+      - "5433:5432" # Avoid conflict with song-db
     networks:
       - my-network
 

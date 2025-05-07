@@ -1,0 +1,32 @@
+server:
+  port: 8084 # You can change this if needed
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/favoritesdb
+    username: favorites_user
+    password: favorites_password
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: https://dev-4tf0bmkwzjz08jb2.us.auth0.com/
+          audience: https://song-api-endpoint/
+
+  kafka:
+    bootstrap-servers: kafka:9092
+    consumer:
+      group-id: favorites-service
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "*"
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer

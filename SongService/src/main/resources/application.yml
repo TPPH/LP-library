@@ -1,17 +1,35 @@
+server:
+  port: 8083
+  address: 0.0.0.0
+
 spring:
   application:
     name: SongService
+
   security:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: dev-4tf0bmkwzjz08jb2.us.auth0.com
+          issuer-uri: https://dev-4tf0bmkwzjz08jb2.us.auth0.com/
           audience: https://song-api-endpoint/
+
   datasource:
-    url: jdbc:postgresql://song-db:5432/song_db
+    url: jdbc:postgresql://localhost:5432/song_db
     username: song_user
     password: song_password
+
   jpa:
     hibernate:
       ddl-auto: create
     defer-datasource-initialization: true
+
+  kafka:
+    consumer:
+      bootstrap-servers: kafka:9092
+      group-id: song
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
