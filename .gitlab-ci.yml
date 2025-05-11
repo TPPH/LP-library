@@ -41,7 +41,7 @@ sonarqube:
 
 
 
-  deploy:
-    stage: deploy
-    script:
-      - kubectl apply -f kubernetes
+deploy:
+  stage: deploy
+  script:
+    - kubectl apply -f kubernetes
