@@ -3,7 +3,7 @@ server:
 
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/favoritesdb
+    url: jdbc:postgresql://localhost:5433/favoritesdb
     username: favorites_user
     password: favorites_password
   jpa:

@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: oauth-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: oauth-service
+  template:
+    metadata:
+      labels:
+        app: oauth-service
+    spec:
+      containers:
+        - name: oauth-service
+          image: tpph/oauth-service:0.1
+          ports:
+            - containerPort: 8082

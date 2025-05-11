@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   oauth-service:
-    build: ./OauthService
+    image: tpph/oauth-service:0.1
     container_name: oauth-service
     ports:
       - "8082:8082"
@@ -10,7 +10,7 @@ services:
       - my-network
 
   song-service:
-    build: ./SongService
+    image: tpph/song-service:0.1
     container_name: song-service
     ports:
       - "8083:8083"
@@ -33,7 +33,7 @@ services:
         condition: service_started
 
   streaming-service:
-    build: ./StreamingService
+    image: tpph/streaming-service:0.1
     container_name: streaming-service
     ports:
       - "8084:8084"
@@ -50,7 +50,7 @@ services:
     restart: always
 
   favorites-service:
-    build: ./FavoritesService
+    image: tpph/favorites-service:0.1
     container_name: favorites-service
     ports:
       - "8085:8085"
@@ -137,7 +137,7 @@ services:
       POSTGRES_DB: favoritesdb
       POSTGRES_USER: favorites_user
     ports:
-      - "5433:5432" # Avoid conflict with song-db
+      - "5433:5432"
     networks:
       - my-network
 

@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: favorites-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: favorites-db
+  template:
+    metadata:
+      labels:
+        app: favorites-db
+    spec:
+      containers:
+        - name: favorites-db
+          image: postgres:latest
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_PASSWORD
+              value: favorites_password
+            - name: POSTGRES_DB
+              value: favoritesdb
+            - name: POSTGRES_USER
+              value: favorites_user

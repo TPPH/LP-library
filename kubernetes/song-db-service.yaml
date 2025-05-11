@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: song-db
+spec:
+  selector:
+    app: song-db
+  ports:
+    - port: 5432
+      targetPort: 5432

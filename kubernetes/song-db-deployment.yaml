@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: song-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: song-db
+  template:
+    metadata:
+      labels:
+        app: song-db
+    spec:
+      containers:
+        - name: song-db
+          image: postgres:latest
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_PASSWORD
+              value: song_password
+            - name: POSTGRES_DB
+              value: song_db
+            - name: POSTGRES_USER
+              value: song_user

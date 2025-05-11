@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: song-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: song-service
+  template:
+    metadata:
+      labels:
+        app: song-service
+    spec:
+      containers:
+        - name: song-service
+          image: tpph/song-service:0.1
+          ports:
+            - containerPort: 8083
+          env:
+            - name: SPRING_KAFKA_BOOTSTRAP_SERVERS
+              value: kafka.default.svc.cluster.local:9092
+            - name: SPRING_KAFKA_TOPIC_NAME
+              value: song-topic
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:postgresql://song-db.default.svc.cluster.local:5432/song_db
+            - name: SPRING_DATASOURCE_USERNAME
+              value: song_user
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: song_password
+            - name: SPRING_JPA_HIBERNATE_DDL_AUTO
+              value: update
+            - name: SPRING_JPA_DATABASE_PLATFORM
+              value: org.hibernate.dialect.PostgreSQLDialect

@@ -2,6 +2,7 @@ stages:
   - build
   - test
   - sonarqube
+  - deploy
 
 variables:
   SONARQUBE_URL: "http://sonarqube:9000"  # Point to SonarQube service in Docker network
@@ -37,3 +38,10 @@ sonarqube:
   only:
     - master  # Run SonarQube analysis only on the master branch
   allow_failure: false  # Fail the pipeline if SonarQube analysis fails
+
+
+
+  deploy:
+    stage: deploy
+    script:
+      - kubectl apply -f kubernetes
