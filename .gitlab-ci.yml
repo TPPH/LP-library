@@ -44,6 +44,5 @@ sonarqube:
 deploy:
   stage: deploy
   script:
-    - apt-get update -y
-    - apt-get install kubectl -y
+    - snap install kubectl --classic
     - kubectl apply -f kubernetes
