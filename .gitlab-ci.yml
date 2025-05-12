@@ -2,16 +2,18 @@ stages:
   - build
   - test
   - sonarqube
+  - push
   - deploy
 
 variables:
-  SONARQUBE_URL: "http://sonarqube:9000"  # Point to SonarQube service in Docker network
+  SONARQUBE_URL: "http://sonarqube:9000"
   GRADLE_OPTS: "-Dorg.gradle.daemon=false"
   GIT_DEPTH: 0
+  IMAGE_TAG: $CI_COMMIT_TAG  # Use the Git tag as the image tag (e.g., v1.0.0)
 
 before_script:
-  - export GRADLE_USER_HOME=`pwd`/.gradle  # Set Gradle user home to avoid using default
-  - chmod +x gradlew  # Ensure gradlew is executable
+  - export GRADLE_USER_HOME=`pwd`/.gradle
+  - chmod +x gradlew
 
 cache:
   key: "$CI_PROJECT_ID"
@@ -22,27 +24,51 @@ cache:
 build:
   stage: build
   script:
-    - echo ./gradlew clean build  # Clean and build your project
+    - ./gradlew clean build
 
 # Test stage
 test:
   stage: test
   script:
-    - echo ./gradlew test  # Ensure this runs your tests
+    - ./gradlew test
 
 # SonarQube analysis stage
 sonarqube:
   stage: sonarqube
   script:
-    - echo ./gradlew sonarqube -Dsonar.login=$SONAR_TOKEN -Dsonar.host.url=$SONARQUBE_URL  # Use environment variable for SonarQube URL
+    - ./gradlew sonarqube -Dsonar.login=$SONAR_TOKEN -Dsonar.host.url=$SONARQUBE_URL
   only:
-    - master  # Run SonarQube analysis only on the master branch
-  allow_failure: true  # Fail the pipeline if SonarQube analysis fails
+    - tags  # Only run analysis when a Git tag is pushed
+  allow_failure: true
 
+# Push Docker images (only on tags)
+docker_push:
+  stage: push
+  image: docker:latest
+  services:
+    - docker:dind
+  before_script:
+    - echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+  script:
+    - docker build -t $DOCKER_USER/oauth-service:$IMAGE_TAG ./OauthService
+    - docker push $DOCKER_USER/oauth-service:$IMAGE_TAG
 
+    - docker build -t $DOCKER_USER/song-service:$IMAGE_TAG ./SongService
+    - docker push $DOCKER_USER/song-service:$IMAGE_TAG
 
+    - docker build -t $DOCKER_USER/streaming-service:$IMAGE_TAG ./StreamingService
+    - docker push $DOCKER_USER/streaming-service:$IMAGE_TAG
+
+    - docker build -t $DOCKER_USER/favorites-service:$IMAGE_TAG ./FavoritesService
+    - docker push $DOCKER_USER/favorites-service:$IMAGE_TAG
+  only:
+    - tags
+
+# Deploy to Kubernetes (only on tags)
 deploy:
   stage: deploy
   image: google/cloud-sdk
   script:
-    - kubectl apply -f kubernetes
+    - kubectl apply -f kubernetes/
+  only:
+    - tags
