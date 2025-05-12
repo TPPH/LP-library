@@ -36,4 +36,10 @@ public class FavoriteController {
         favoriteService.removeFavorite(extractUserId(jwt), songId);
         return ResponseEntity.noContent().build();
     }
+
+    // Hello World Endpoint
+    @GetMapping("/hello")
+    public ResponseEntity<String> helloWorld() {
+        return ResponseEntity.ok("Hello, World!");
+    }
 }

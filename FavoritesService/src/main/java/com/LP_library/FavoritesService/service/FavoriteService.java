@@ -1,38 +1,35 @@
 package com.LP_library.FavoritesService.service;
 
-import com.LP_library.FavoritesService.Kafka.SongValidationConsumer;
-import com.LP_library.FavoritesService.Kafka.SongValidationProducer;
 import com.LP_library.FavoritesService.model.Favorite;
 import com.LP_library.FavoritesService.repository.FavoriteRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
 public class FavoriteService {
 
     private final FavoriteRepository repository;
-    private final SongValidationProducer producer;
-    private final SongValidationConsumer consumer;
+
+    // Removed Kafka components
+    // private final SongValidationProducer producer;
+    // private final SongValidationConsumer consumer;
+
+    // Use a simple method to validate if a song exists (for testing purposes)
+    private boolean validateSongExists(Long songId) {
+        // Replace with actual validation logic or a mock check
+        return true; // For testing, assume the song always exists
+    }
 
     public Favorite addFavorite(String userId, Long songId) {
-        String correlationId = UUID.randomUUID().toString();
-        var future = consumer.registerValidationRequest(correlationId);
-        producer.sendValidationRequest(songId, correlationId);
-
-        try {
-            boolean exists = future.get(5, TimeUnit.SECONDS); // Wait max 5 seconds
-            if (!exists) {
-                throw new IllegalArgumentException("Song does not exist");
-            }
-        } catch (Exception e) {
-            throw new RuntimeException("Validation failed: " + e.getMessage());
+        // Validate song existence without Kafka
+        if (!validateSongExists(songId)) {
+            throw new IllegalArgumentException("Song does not exist");
         }
 
+        // Proceed with adding favorite if not already present
         if (!repository.existsByUserIdAndSongId(userId, songId)) {
             return repository.save(Favorite.builder().userId(userId).songId(songId).build());
         }
