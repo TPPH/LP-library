@@ -25,18 +25,21 @@ cache:
 # Build stage
 build:
   stage: build
+  image: gradle:jdk17
   script:
     - ./gradlew clean build
 
 # Test stage
 test:
   stage: test
+  image: gradle:jdk17
   script:
     - ./gradlew test
 
 # SonarQube analysis stage
 sonarqube:
   stage: sonarqube
+  image: gradle:jdk17
   script:
     - ./gradlew sonarqube -Dsonar.login=$SONAR_TOKEN -Dsonar.host.url=$SONARQUBE_URL
   only:
