@@ -28,6 +28,12 @@ build:
   image: gradle:jdk17
   script:
     - ./gradlew clean build
+  artifacts:
+    paths:
+      - OauthService/build/libs/
+      - SongService/build/libs/
+      - StreamingService/build/libs/
+      - FavoritesService/build/libs/
 
 # Test stage
 test:
