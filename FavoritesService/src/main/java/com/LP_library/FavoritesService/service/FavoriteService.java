@@ -1,46 +1,53 @@
 package com.LP_library.FavoritesService.service;
 
+import com.LP_library.FavoritesService.Kafka.SongValidationConsumer;
+import com.LP_library.FavoritesService.Kafka.SongValidationProducer;
 import com.LP_library.FavoritesService.model.Favorite;
 import com.LP_library.FavoritesService.repository.FavoriteRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 @Service
 @RequiredArgsConstructor
 public class FavoriteService {
-
-    private final FavoriteRepository repository;
-
-    // Removed Kafka components
-    // private final SongValidationProducer producer;
-    // private final SongValidationConsumer consumer;
-
-    // Use a simple method to validate if a song exists (for testing purposes)
-    private boolean validateSongExists(Long songId) {
-        // Replace with actual validation logic or a mock check
-        return true; // For testing, assume the song always exists
-    }
+    private final FavoriteRepository favoriteRepository;
+    private final SongValidationProducer validationProducer;
+    private final SongValidationConsumer validationConsumer;
 
     public Favorite addFavorite(String userId, Long songId) {
-        // Validate song existence without Kafka
-        if (!validateSongExists(songId)) {
-            throw new IllegalArgumentException("Song does not exist");
+        String correlationId = java.util.UUID.randomUUID().toString();
+
+        // Register the request so we can wait for the reply
+        CompletableFuture<Boolean> validationFuture = validationConsumer.registerValidationRequest(correlationId);
+        validationProducer.sendValidationRequest(songId, correlationId);
+
+        boolean songExists;
+        try {
+            // Wait max 3 seconds for response
+            songExists = validationFuture.get(3, java.util.concurrent.TimeUnit.SECONDS);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to validate song existence via Kafka", e);
         }
 
-        // Proceed with adding favorite if not already present
-        if (!repository.existsByUserIdAndSongId(userId, songId)) {
-            return repository.save(Favorite.builder().userId(userId).songId(songId).build());
+        if (!songExists) {
+            throw new IllegalArgumentException("Song with ID " + songId + " does not exist.");
         }
-        return null; // Already exists
-    }
 
-    public void removeFavorite(String userId, Long songId) {
-        repository.deleteByUserIdAndSongId(userId, songId);
+        Favorite favorite = new Favorite();
+        favorite.setUserId(userId);
+        favorite.setSongId(songId);
+        return favoriteRepository.save(favorite);
     }
 
     public List<Favorite> getFavorites(String userId) {
-        return repository.findByUserId(userId);
+        return favoriteRepository.findByUserId(userId);
+    }
+
+    public void removeFavorite(String userId, Long songId) {
+        favoriteRepository.deleteByUserIdAndSongId(userId, songId);
     }
 }
+
