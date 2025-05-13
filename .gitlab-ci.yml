@@ -11,7 +11,7 @@ variables:
   GIT_DEPTH: 0
   IMAGE_TAG: $CI_COMMIT_TAG
   DOCKER_HOST: tcp://docker:2375
-  DOCKER_TLS_CERTDIR: ""  # Required for docker:dind
+  DOCKER_TLS_CERTDIR: ""
 
 before_script:
   - export GRADLE_USER_HOME=`pwd`/.gradle
@@ -23,7 +23,7 @@ cache:
     - .gradle/
 
 ##########################
-# BUILD STAGE PER SERVICE
+# BUILD JOBS
 ##########################
 
 build:oauth:
@@ -34,7 +34,6 @@ build:oauth:
   artifacts:
     paths:
       - OauthService/build/libs/
-    expire_in: 1 hour
   rules:
     - changes:
         - OauthService/**/*
@@ -47,7 +46,6 @@ build:song:
   artifacts:
     paths:
       - SongService/build/libs/
-    expire_in: 1 hour
   rules:
     - changes:
         - SongService/**/*
@@ -60,7 +58,6 @@ build:streaming:
   artifacts:
     paths:
       - StreamingService/build/libs/
-    expire_in: 1 hour
   rules:
     - changes:
         - StreamingService/**/*
@@ -73,14 +70,13 @@ build:favorites:
   artifacts:
     paths:
       - FavoritesService/build/libs/
-    expire_in: 1 hour
   rules:
     - changes:
         - FavoritesService/**/*
 
-#############
-# TEST STAGE
-#############
+##########################
+# TEST JOB
+##########################
 
 test:
   stage: test
@@ -89,7 +85,7 @@ test:
     - ./gradlew test
 
 ##########################
-# SONARQUBE STAGE
+# SONARQUBE JOB
 ##########################
 
 sonarqube:
@@ -97,13 +93,13 @@ sonarqube:
   image: gradle:jdk17
   script:
     - ./gradlew sonarqube -Dsonar.login=$SONAR_TOKEN -Dsonar.host.url=$SONARQUBE_URL
-  only:
-    - tags
+  rules:
+    - if: '$CI_COMMIT_TAG'
   allow_failure: true
 
-####################################
-# DOCKER BUILD & PUSH PER SERVICE
-####################################
+##########################
+# DOCKER PUSH JOBS (only if tag + changed)
+##########################
 
 docker:oauth:
   stage: push
@@ -117,10 +113,9 @@ docker:oauth:
     - docker push $DOCKER_USER/oauth-service:$IMAGE_TAG
   dependencies:
     - build:oauth
-  only:
-    - tags
   rules:
-    - changes:
+    - if: '$CI_COMMIT_TAG'
+      changes:
         - OauthService/**/*
 
 docker:song:
@@ -135,10 +130,9 @@ docker:song:
     - docker push $DOCKER_USER/song-service:$IMAGE_TAG
   dependencies:
     - build:song
-  only:
-    - tags
   rules:
-    - changes:
+    - if: '$CI_COMMIT_TAG'
+      changes:
         - SongService/**/*
 
 docker:streaming:
@@ -153,10 +147,9 @@ docker:streaming:
     - docker push $DOCKER_USER/streaming-service:$IMAGE_TAG
   dependencies:
     - build:streaming
-  only:
-    - tags
   rules:
-    - changes:
+    - if: '$CI_COMMIT_TAG'
+      changes:
         - StreamingService/**/*
 
 docker:favorites:
@@ -171,20 +164,19 @@ docker:favorites:
     - docker push $DOCKER_USER/favorites-service:$IMAGE_TAG
   dependencies:
     - build:favorites
-  only:
-    - tags
   rules:
-    - changes:
+    - if: '$CI_COMMIT_TAG'
+      changes:
         - FavoritesService/**/*
 
-##################
-# DEPLOY TO K8S
-##################
+##########################
+# DEPLOY JOB
+##########################
 
 deploy:
   stage: deploy
   image: google/cloud-sdk
   script:
     - kubectl apply -f kubernetes/
-  only:
-    - tags
+  rules:
+    - if: '$CI_COMMIT_TAG'
