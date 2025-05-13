@@ -63,8 +63,8 @@ services:
       SPRING_DATASOURCE_PASSWORD: favorites_password
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
       SPRING_JPA_DATABASE_PLATFORM: org.hibernate.dialect.PostgreSQLDialect
-      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI: https://song-api-endpoint/
-      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_AUDIENCE: <your-api-identifier>
+      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI: https://dev-4tf0bmkwzjz08jb2.us.auth0.com/
+      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_AUDIENCE: https://song-api-endpoint/
     depends_on:
       kafka:
         condition: service_started

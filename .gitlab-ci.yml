@@ -35,6 +35,9 @@ build:oauth:
     paths:
       - OauthService/build/libs/
     expire_in: 1 hour
+  rules:
+    - changes:
+        - OauthService/**/*
 
 build:song:
   stage: build
@@ -45,6 +48,9 @@ build:song:
     paths:
       - SongService/build/libs/
     expire_in: 1 hour
+  rules:
+    - changes:
+        - SongService/**/*
 
 build:streaming:
   stage: build
@@ -55,6 +61,9 @@ build:streaming:
     paths:
       - StreamingService/build/libs/
     expire_in: 1 hour
+  rules:
+    - changes:
+        - StreamingService/**/*
 
 build:favorites:
   stage: build
@@ -65,6 +74,9 @@ build:favorites:
     paths:
       - FavoritesService/build/libs/
     expire_in: 1 hour
+  rules:
+    - changes:
+        - FavoritesService/**/*
 
 #############
 # TEST STAGE
@@ -77,7 +89,7 @@ test:
     - ./gradlew test
 
 ##########################
-# SONARQUBE STAGE (OPTIONAL)
+# SONARQUBE STAGE
 ##########################
 
 sonarqube:
@@ -107,6 +119,9 @@ docker:oauth:
     - build:oauth
   only:
     - tags
+  rules:
+    - changes:
+        - OauthService/**/*
 
 docker:song:
   stage: push
@@ -122,6 +137,9 @@ docker:song:
     - build:song
   only:
     - tags
+  rules:
+    - changes:
+        - SongService/**/*
 
 docker:streaming:
   stage: push
@@ -137,6 +155,9 @@ docker:streaming:
     - build:streaming
   only:
     - tags
+  rules:
+    - changes:
+        - StreamingService/**/*
 
 docker:favorites:
   stage: push
@@ -152,6 +173,9 @@ docker:favorites:
     - build:favorites
   only:
     - tags
+  rules:
+    - changes:
+        - FavoritesService/**/*
 
 ##################
 # DEPLOY TO K8S
