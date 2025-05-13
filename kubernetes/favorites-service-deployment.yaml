@@ -31,6 +31,6 @@ spec:
             - name: SPRING_JPA_DATABASE_PLATFORM
               value: org.hibernate.dialect.PostgreSQLDialect
             - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI
-              value: https://<your-auth0-domain>/
+              value: https://song-api-endpoint/
             - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_AUDIENCE
               value: <your-api-identifier>

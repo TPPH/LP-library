@@ -1,9 +1,8 @@
-
 spring:
   application:
     name: FavoritesService
   server:
-    port: 8085 # You can change this if needed
+    port: 8080 # You can change this if needed
     address: 0.0.0.0
 
   datasource:
@@ -34,3 +33,5 @@ spring:
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      listener:
+        auto-startup: false

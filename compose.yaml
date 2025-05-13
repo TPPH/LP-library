@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   oauth-service:
-    image: tpph/oauth-service:0.1
+    image: tpph/oauth-service:v1.0.8
     container_name: oauth-service
     ports:
       - "8082:8082"
@@ -10,7 +10,7 @@ services:
       - my-network
 
   song-service:
-    image: tpph/song-service:0.1
+    image: tpph/song-service:v1.0.8
     container_name: song-service
     ports:
       - "8083:8083"
@@ -33,7 +33,7 @@ services:
         condition: service_started
 
   streaming-service:
-    image: tpph/streaming-service:0.1
+    image: tpph/streaming-service:v1.0.8
     container_name: streaming-service
     ports:
       - "8084:8084"
@@ -50,10 +50,10 @@ services:
     restart: always
 
   favorites-service:
-    image: tpph/favorites-service:0.1
+    image: tpph/favorites-service:test
     container_name: favorites-service
     ports:
-      - "8085:8085"
+      - "8080:8080"
     networks:
       - my-network
     environment:
@@ -63,7 +63,7 @@ services:
       SPRING_DATASOURCE_PASSWORD: favorites_password
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
       SPRING_JPA_DATABASE_PLATFORM: org.hibernate.dialect.PostgreSQLDialect
-      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI: https://<your-auth0-domain>/
+      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI: https://song-api-endpoint/
       SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_AUDIENCE: <your-api-identifier>
     depends_on:
       kafka:
