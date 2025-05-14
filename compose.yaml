@@ -39,6 +39,9 @@ services:
       - "8084:8084"
     networks:
       - my-network
+    environment:
+      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI: https://dev-4tf0bmkwzjz08jb2.us.auth0.com/
+      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_AUDIENCE: https://song-api-endpoint/
     restart: always
 
   favorites-service:
