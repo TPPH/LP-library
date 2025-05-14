@@ -14,7 +14,7 @@ public class AzureBlobConfig {
     private String connectionString;
 
     @Value("${azure.storage.container-name}")
-    private String containerName;
+    private String containerName; //test
 
     @Bean
     public BlobContainerClient blobContainerClient() {
