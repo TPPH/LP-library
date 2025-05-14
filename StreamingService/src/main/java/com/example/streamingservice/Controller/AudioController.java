@@ -30,4 +30,9 @@ public class AudioController {
     public ResponseEntity<byte[]> streamAudio(@PathVariable String fileName) {
         return audioStreamingService.streamAudio(fileName);
     }
+
+    @GetMapping("/hello")
+    public ResponseEntity<String> helloWorld() {
+        return ResponseEntity.ok("Hello, World!");
+    }
 }

@@ -20,15 +20,10 @@ repositories {
 dependencies {
 	// Spring Boot dependencies
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.springframework.boot:spring-boot-starter-security'
-
-		implementation 'com.azure:azure-storage-blob:12.25.0' // Or latest version
-
-
+	implementation 'com.azure:azure-storage-blob:12.25.0' // Or latest version
 	// Lombok to reduce boilerplate
 	compileOnly 'org.projectlombok:lombok:1.18.24'
 	annotationProcessor 'org.projectlombok:lombok:1.18.24'
-
 	// Testing dependencies
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }

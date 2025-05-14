@@ -1,9 +1,10 @@
+server:
+  port: 8080 # You can change this if needed
+  address: 0.0.0.0
+
 spring:
   application:
     name: FavoritesService
-  server:
-    port: 8080 # You can change this if needed
-    address: 0.0.0.0
 
   datasource:
     url: jdbc:postgresql://localhost:5433/favoritesdb
