@@ -15,8 +15,10 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf -> csrf.disable())
+                .cors(cors -> {})
                 .authorizeHttpRequests(authz -> authz
                         .requestMatchers("/api/search").authenticated()
+                        .requestMatchers("/api/songs/**").authenticated()  // 👈 Secure CRUD endpoints
                         .anyRequest().permitAll()
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2
@@ -26,4 +28,3 @@ public class SecurityConfig {
         return http.build();
     }
 }
-
