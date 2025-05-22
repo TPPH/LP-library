@@ -33,6 +33,12 @@ public class AudioController {
         return audioStreamingService.streamAudio(fileName);
     }
 
+    @GetMapping("/sas-url/{fileName}")
+    public ResponseEntity<String> getSasUrl(@PathVariable String fileName, @AuthenticationPrincipal Jwt jwt) {
+        String sasUrl = audioStreamingService.generateReadSasUrl(fileName);
+        return ResponseEntity.ok(sasUrl);
+    }
+
     @GetMapping("/hello")
     public ResponseEntity<String> helloWorld() {
         return ResponseEntity.ok("Hello, World!");
