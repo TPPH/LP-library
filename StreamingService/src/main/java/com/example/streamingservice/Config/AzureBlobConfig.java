@@ -13,7 +13,7 @@ public class AzureBlobConfig {
     @Value("${azure.storage.connection-string}")
     private String connectionString;
 
-    @Value("${azure.storage.container-name}")
+    @Value("${azure.storage.container-name}") // azuer link
     private String containerName; //test
 
     @Bean
