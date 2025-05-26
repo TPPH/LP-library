@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: favorites-service
-          image: tpph/favorites-service:0.1
+          image: tpph/favorites-service:v1.0.18
           ports:
             - containerPort: 8085
           env:

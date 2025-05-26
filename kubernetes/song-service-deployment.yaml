@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: song-service
-          image: tpph/song-service:0.1
+          image: tpph/song-service:v1.0.18
           ports:
             - containerPort: 8083
           env:

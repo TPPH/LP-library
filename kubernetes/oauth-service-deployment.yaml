@@ -14,6 +14,6 @@ spec:
     spec:
       containers:
         - name: oauth-service
-          image: tpph/oauth-service:0.1
+          image: tpph/oauth-service:v1.0.18
           ports:
             - containerPort: 8082

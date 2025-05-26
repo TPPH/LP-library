@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: streaming-service
-          image: tpph/streaming-service:0.1
+          image: tpph/streaming-service:v1.0.18
           ports:
             - containerPort: 8084
           env:
