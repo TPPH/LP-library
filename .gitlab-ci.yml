@@ -104,7 +104,7 @@ build:favorites:
 
 snyk_security:
   stage: Security
-  image: maven:3.8.6-openjdk-11
+  image: trion/ng-cli-karma
   script:
     - apt-get update && apt-get install -y openjdk-11-jdk  # install JDK
     - npm install -g snyk snyk-to-html
