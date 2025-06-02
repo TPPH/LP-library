@@ -2,6 +2,7 @@ stages:
   - build
   - test
   - sonarqube
+  - Security
   - push
   - deploy
 
@@ -96,6 +97,26 @@ build:favorites:
 #  rules:
 #    - if: '$CI_COMMIT_TAG'
 #  allow_failure: true
+
+##########################
+# SNYK-SECURITY JOB
+##########################
+
+snyk_security:
+  stage: Security
+  image: node:16
+  script:
+    - apt-get update && apt-get install -y openjdk-11-jdk  # install JDK
+    - npm install -g snyk snyk-to-html
+    - snyk auth $SNYK_TOKEN
+    - mvn clean verify                                     # build project & download deps
+    - snyk test --all-projects --json | snyk-to-html -o results-java.html
+  artifacts:
+    paths:
+      - "results-java.html"
+    expire_in: 30 days
+    when: always
+  allow_failure: true
 
 ##########################
 # DOCKER PUSH JOBS (only if tag + changed)
