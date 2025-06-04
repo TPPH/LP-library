@@ -108,6 +108,9 @@ snyk-security-scan:
   variables:
     SNYK_TOKEN: $SNYK_TOKEN
   script:
+    - export GRADLE_USER_HOME=`pwd`/.gradle
+    - chmod +x ./gradlew
+    - ./gradlew clean build --no-daemon --quiet
     - snyk test --all-projects --gradle-sub-project
 
 ##########################
