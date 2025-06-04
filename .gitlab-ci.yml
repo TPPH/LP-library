@@ -102,7 +102,7 @@ snyk-security-scan:
     - snyk-to-html -i snyk-results.json -o snyk-results.html
   artifacts:
     paths:
-      - "results-*.html"
+      - "snyk-results.html"
     expire_in: 30 days
   when: always
   allow_failure: true
