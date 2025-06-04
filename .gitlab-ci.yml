@@ -98,15 +98,8 @@ snyk-security-scan:
     - chmod +x ./gradlew
     - ./gradlew clean build --no-daemon --stacktrace
     - export SNYK_TOKEN=$SNYK_TOKEN
-    # Scan each service and append to same HTML
-    - cd OauthService && snyk test --json > ../results-oauth.json || true && cd ..
-    - cd SongService && snyk test --json > ../results-song.json || true && cd ..
-    - cd StreamingService && snyk test --json > ../results-streaming.json || true && cd ..
-    - cd FavoritesService && snyk test --json > ../results-favorites.json || true && cd ..
-    - snyk-to-html -i results-oauth.json -o results-oauth.html
-    - snyk-to-html -i results-song.json -o results-song.html
-    - snyk-to-html -i results-streaming.json -o results-streaming.html
-    - snyk-to-html -i results-favorites.json -o results-favorites.html
+    - snyk test --all-sub-projects --json > snyk-results.json || true
+    - snyk-to-html -i snyk-results.json -o snyk-results.html
   artifacts:
     paths:
       - "results-*.html"
