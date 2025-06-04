@@ -27,42 +27,42 @@ cache:
 # BUILD JOBS
 ##########################
 
-build:oauth:
-  stage: build
-  image: gradle:jdk17
-  script:
-    - ./gradlew :OauthService:clean :OauthService:build
-  artifacts:
-    paths:
-      - OauthService/build/libs/
-
-build:song:
-  stage: build
-  image: gradle:jdk17
-  script:
-    - ./gradlew :SongService:clean :SongService:build
-  artifacts:
-    paths:
-      - SongService/build/libs/
-
-
-build:streaming:
-  stage: build
-  image: gradle:jdk17
-  script:
-    - ./gradlew :StreamingService:clean :StreamingService:build
-  artifacts:
-    paths:
-      - StreamingService/build/libs/
-
-build:favorites:
-  stage: build
-  image: gradle:jdk17
-  script:
-    - ./gradlew :FavoritesService:clean :FavoritesService:build
-  artifacts:
-    paths:
-      - FavoritesService/build/libs/
+#build:oauth:
+#  stage: build
+#  image: gradle:jdk17
+#  script:
+#    - ./gradlew :OauthService:clean :OauthService:build
+#  artifacts:
+#    paths:
+#      - OauthService/build/libs/
+#
+#build:song:
+#  stage: build
+#  image: gradle:jdk17
+#  script:
+#    - ./gradlew :SongService:clean :SongService:build
+#  artifacts:
+#    paths:
+#      - SongService/build/libs/
+#
+#
+#build:streaming:
+#  stage: build
+#  image: gradle:jdk17
+#  script:
+#    - ./gradlew :StreamingService:clean :StreamingService:build
+#  artifacts:
+#    paths:
+#      - StreamingService/build/libs/
+#
+#build:favorites:
+#  stage: build
+#  image: gradle:jdk17
+#  script:
+#    - ./gradlew :FavoritesService:clean :FavoritesService:build
+#  artifacts:
+#    paths:
+#      - FavoritesService/build/libs/
 
 ##########################
 # TEST JOB
@@ -97,7 +97,7 @@ snyk-security-scan:
     - export GRADLE_USER_HOME=`pwd`/.gradle
     - chmod +x ./gradlew
     - ./gradlew clean build --no-daemon --stacktrace
-    - snyk auth $SNYK_TOKEN
+    - export SNYK_TOKEN=$SNYK_TOKEN
     - snyk test --all-sub-projects --json-file-output=snyk-results.json || true
     - snyk-to-html -i snyk-results.json -o snyk-results.html
   artifacts:
