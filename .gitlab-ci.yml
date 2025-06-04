@@ -108,7 +108,6 @@ snyk-security-scan:
   variables:
     SNYK_TOKEN: $SNYK_TOKEN
   script:
-    - snyk auth "$SNYK_TOKEN"
     - snyk test --all-projects --gradle-sub-project
 
 ##########################
