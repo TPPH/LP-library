@@ -103,14 +103,12 @@ build:favorites:
 ##########################
 
 snyk-security-scan:
-  image: node:18
+  image: snyk/snyk-cli:latest  # Official Snyk CLI image
   stage: Security
-  before_script:
-    - apt-get update && apt-get install -y curl openjdk-17-jdk
-    - curl -sL https://snyk.io/install | bash
-    - export PATH="$HOME/.snyk:$PATH"
-    - snyk auth "$SNYK_TOKEN"
+  variables:
+    SNYK_TOKEN: $SNYK_TOKEN
   script:
+    - snyk auth "$SNYK_TOKEN"
     - snyk test --all-projects --gradle-sub-project
 
 ##########################
