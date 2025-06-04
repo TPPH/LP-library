@@ -35,9 +35,6 @@ build:oauth:
   artifacts:
     paths:
       - OauthService/build/libs/
-  rules:
-    - changes:
-        - OauthService/**/*
 
 build:song:
   stage: build
@@ -47,9 +44,7 @@ build:song:
   artifacts:
     paths:
       - SongService/build/libs/
-  rules:
-    - changes:
-        - SongService/**/*
+
 
 build:streaming:
   stage: build
@@ -59,9 +54,6 @@ build:streaming:
   artifacts:
     paths:
       - StreamingService/build/libs/
-  rules:
-    - changes:
-        - StreamingService/**/*
 
 build:favorites:
   stage: build
@@ -71,9 +63,6 @@ build:favorites:
   artifacts:
     paths:
       - FavoritesService/build/libs/
-  rules:
-    - changes:
-        - FavoritesService/**/*
 
 ##########################
 # TEST JOB
