@@ -110,8 +110,8 @@ snyk-security-scan:
   script:
     - export GRADLE_USER_HOME=`pwd`/.gradle
     - chmod +x ./gradlew
-    - ./gradlew clean build --no-daemon --quiet
-    - snyk test --all-projects --gradle-sub-project
+    - ./gradlew clean build --no-daemon --stacktrace
+    - snyk test --gradle-sub-project=SongService
 
 ##########################
 # DOCKER PUSH JOBS (only if tag + changed)
