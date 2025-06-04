@@ -102,21 +102,19 @@ build:favorites:
 # SNYK-SECURITY JOB
 ##########################
 
-snyk_security:
+snyk-security-scan:
+  image: node:18
   stage: Security
-  image: trion/ng-cli-karma
+  before_script:
+    - apt-get update && apt-get install -y curl openjdk-17-jdk
+    - curl -sL https://snyk.io/install | bash
+    - export PATH="$HOME/.snyk:$PATH"
+    - snyk auth "$SNYK_TOKEN"
   script:
-    - apt-get update && apt-get install -y openjdk-11-jdk  # install JDK
-    - npm install -g snyk snyk-to-html
-    - snyk auth $SNYK_TOKEN
-    - mvn clean verify                                     # build project & download deps
-    - snyk test --all-projects --json | snyk-to-html -o results-java.html
-  artifacts:
-    paths:
-      - "results-java.html"
-    expire_in: 30 days
-    when: always
-  allow_failure: true
+    - snyk test --all-projects --gradle-sub-project
+  only:
+    - main
+    - merge_requests
 
 ##########################
 # DOCKER PUSH JOBS (only if tag + changed)
