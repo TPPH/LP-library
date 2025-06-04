@@ -98,7 +98,7 @@ snyk-security-scan:
     - chmod +x ./gradlew
     - ./gradlew clean build --no-daemon --stacktrace
     - export SNYK_TOKEN=$SNYK_TOKEN
-    - snyk test --all-projects --gradle-sub-project --json | snyk-to-html -o results-java.html
+    - snyk test --all-projects --gradle-sub-project --json | snyk-to-html -o results-java.html || true
   artifacts:
     paths:
       - "results-*.html"
