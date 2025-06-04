@@ -92,14 +92,19 @@ build:favorites:
 ##########################
 
 snyk-security-scan:
-  image: snyk/snyk-cli:latest  # Official Snyk CLI image
   stage: Security
   script:
     - export GRADLE_USER_HOME=`pwd`/.gradle
     - chmod +x ./gradlew
     - ./gradlew clean build --no-daemon --stacktrace
-    - export SNYK_TOKEN="bd401fd1-af20-4b5d-ab41-89da7b9daa34"
-    - snyk test --gradle-sub-project=SongService
+    - export SNYK_TOKEN = $SNYK_TOKEN
+    - snyk test --all-projects --gradle-sub-project | snyk-to-html -o results-java.html
+  artifacts:
+    paths:
+      - "results-*.html"
+    expire_in: 30 days
+  when: always
+  allow_failure: true
 
 ##########################
 # DOCKER PUSH JOBS (only if tag + changed)
