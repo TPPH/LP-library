@@ -111,6 +111,7 @@ snyk-security-scan:
     - export GRADLE_USER_HOME=`pwd`/.gradle
     - chmod +x ./gradlew
     - ./gradlew clean build --no-daemon --stacktrace
+    - snyk auth $SNYK_TOKEN
     - snyk test --gradle-sub-project=SongService
 
 ##########################
