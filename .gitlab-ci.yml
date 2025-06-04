@@ -112,9 +112,6 @@ snyk-security-scan:
     - snyk auth "$SNYK_TOKEN"
   script:
     - snyk test --all-projects --gradle-sub-project
-  only:
-    - main
-    - merge_requests
 
 ##########################
 # DOCKER PUSH JOBS (only if tag + changed)
