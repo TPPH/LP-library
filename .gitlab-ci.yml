@@ -97,7 +97,7 @@ snyk-security-scan:
     - export GRADLE_USER_HOME=`pwd`/.gradle
     - chmod +x ./gradlew
     - ./gradlew clean build --no-daemon --stacktrace
-    - export SNYK_TOKEN = $SNYK_TOKEN
+    - export SNYK_TOKEN=$SNYK_TOKEN
     - snyk test --all-projects --gradle-sub-project | snyk-to-html -o results-java.html
   artifacts:
     paths:
