@@ -29,7 +29,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-authorization-server'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
-	implementation 'com.auth0:auth0-spring-security-api:1.4.0'
+	implementation 'com.auth0:auth0-spring-security-api:1.5.3'
 	implementation 'org.projectlombok:lombok'
 	implementation 'com.fasterxml.jackson.core:jackson-databind'
 	annotationProcessor 'org.projectlombok:lombok'
