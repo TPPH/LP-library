@@ -1,22 +1,22 @@
 version: 2
 updates:
   - package-ecosystem: "gradle"
-    directory: "../OauthService"
+    directory: "/OauthService"
     schedule:
       interval: "weekly"
 
   - package-ecosystem: "gradle"
-    directory: "../SongService"
+    directory: "/SongService"
     schedule:
       interval: "weekly"
 
   - package-ecosystem: "gradle"
-    directory: "../StreamingService"
+    directory: "/StreamingService"
     schedule:
       interval: "weekly"
 
   - package-ecosystem: "gradle"
-    directory: "../FavoritesService"
+    directory: "/FavoritesService"
     schedule:
       interval: "weekly"
 
