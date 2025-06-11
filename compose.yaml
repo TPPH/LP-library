@@ -1,8 +1,7 @@
-version: '3.8'
-
 services:
   oauth-service:
-    image: tpph/oauth-service:v1.0.12
+    build:
+      context: ./oauthservice
     container_name: oauth-service
     ports:
       - "8082:8082"
@@ -10,7 +9,8 @@ services:
       - my-network
 
   song-service:
-    image: tpph/song-service:test
+    build:
+      context: ./songservice
     container_name: song-service
     ports:
       - "8083:8083"
@@ -33,7 +33,8 @@ services:
         condition: service_started
 
   streaming-service:
-    image: tpph/streaming-service:test
+    build:
+      context: ./streamingservice
     container_name: streaming-service
     ports:
       - "8084:8084"
@@ -45,7 +46,8 @@ services:
     restart: always
 
   favorites-service:
-    image: tpph/favorites-service:test
+    build:
+      context: ./favoritesservice
     container_name: favorites-service
     ports:
       - "8080:8080"
@@ -67,7 +69,6 @@ services:
         condition: service_started
       oauth-service:
         condition: service_started
-
 
   zookeeper:
     image: confluentinc/cp-zookeeper:latest

@@ -27,9 +27,26 @@ public class SongValidationConsumer {
         System.out.println("🔥 [Kafka] Received message: " + message);
 
         try {
-            JsonNode json = objectMapper.readTree(message);
-            Long songId = json.get("songId").asLong();
-            String correlationId = json.get("correlationId").asText();
+            // Handle double-encoded JSON string:
+            String unwrappedMessage = message;
+            if (message.startsWith("\"") && message.endsWith("\"")) {
+                unwrappedMessage = objectMapper.readValue(message, String.class);
+            }
+            JsonNode json = objectMapper.readTree(unwrappedMessage);
+
+            JsonNode songIdNode = json.get("songId");
+            if (songIdNode == null) {
+                logger.error("Missing 'songId' in Kafka message: {}", unwrappedMessage);
+                return;
+            }
+            Long songId = songIdNode.asLong();
+
+            JsonNode correlationIdNode = json.get("correlationId");
+            if (correlationIdNode == null) {
+                logger.error("Missing 'correlationId' in Kafka message: {}", unwrappedMessage);
+                return;
+            }
+            String correlationId = correlationIdNode.asText();
 
             logger.info("Received validation request for songId: {} with correlationId: {}", songId, correlationId);
             System.out.println("🔍 Validating songId: " + songId + ", correlationId: " + correlationId);
