@@ -35,7 +35,7 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 
 	// H2 (for local dev), replace with PostgreSQL/MySQL if needed
-	implementation 'org.postgresql:postgresql:42.6.0'  // or the appropriate version
+	implementation 'org.postgresql:postgresql:42.7.7'  // or the appropriate version
 
 
 	// JSON Serialization/Deserialization
